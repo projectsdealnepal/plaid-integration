@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% include 'js.html' %}
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>-->
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>-->
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">-->
+<!--    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+<!--    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+<!--&lt;!&ndash;<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">&ndash;&gt;-->
+<!--    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>-->
+
+    <script>
+    let select = '{{ select }}';
+    if (select == 1){
+       $(window).on('load', function() {
+        $('#bank_account').modal('show');
+    });
+
+    }
+    if (select == 2){
+    $(window).on('load', function() {
+        $('#login_success').modal('show');
+    });
+    }
+    </script>
+</head>
+<body>
+    {% include 'header.html' %}
+    <section class="vh-200" style="background-color: #eee;">
+        <div class="container-fluid">
+        <div class="row">
+            {% include 'sidebar.html' %}
+            <div class="col">
+                <div class="row">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4>Bank Accounts</h4>
+                                    </div>
+                                    <div class="col">
+                                        <a style="float: right; background-color: black; color: white" type="button" class="btn btn-lg" href = "{% url 'add_account' %}" ><h4>Connect</h4></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="dropdown">
+                                          <button class="btn btn-secondary dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Date
+                                          </button>
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">Custom</a>
+                                            <a class="dropdown-item" href="#">Last Week</a>
+                                            <a class="dropdown-item" href="#">Last Month</a>
+                                          </div>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                        <label class="input-group-text">From</label>
+                                        <input type="date" name="from" class="form-control" value="">
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                        <label class="input-group-text">To</label>
+                                        <input type="date" name="to" class="form-control" value="">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card">
+
+
+
+                        <div class="card-body">
+                            {% if bank %}
+                                <form method="post">
+                                    {% csrf_token %}
+
+                                    <h5 style="text-align: left"><span class="badge bg-secondary">{{name}}</span></h5>
+<!--                                    <div class="dropdown">-->
+<!--                                          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                                            Update Account-->
+<!--                                          </button>-->
+<!--                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+<!--                                            <a class="dropdown-item" href="#">Chase</a>-->
+<!--                                            <a class="dropdown-item" href="#">Bank of America</a>-->
+<!--                                            <a class="dropdown-item" href="#">Something else here</a>-->
+<!--                                          </div>-->
+<!--                                    </div>-->
+                                {% for ac in bank %}
+                                    <div class="list-group">
+                                      <a href="?act_id={{ac.act_id}}&ins_id={{id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" value="">
+                                              <label class="form-check-label" for="defaultCheck1">
+                                                  <h4>{{ac.acc_no}}</h4>
+                                              </label>
+                                            </div>
+
+                                            <small>${{ac.current}}</small>
+                                        </div>
+                                          <p class="mb-1">{{ac.name}}</p>
+                                        <p class="mb-1">{{ac.off}}</p>-
+                                        <small>{{ac.type}}</small>
+                                      </a>
+
+                                    </div>
+                                {% endfor %}
+                                    <br>
+                                    <div class="list-group">
+                                        <div class="col-sm-4">
+                                            <button type="submit" name="get" class="btn btn-primary" >Get Account</button>
+                                        </div>
+                                    </div>
+                                    </form>
+
+
+
+                            {% else %}
+                                {% if not transaction %}
+                                    <small>You haven't linked any accounts</small>
+                                {% endif %}
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                </div>
+                </div>
+
+                <div class="card">
+                    {% if transaction %}
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="row">
+
+                                        <div class="col" style="align:right">
+                                            <button name="download" class="btn btn-primary"><i class="fa fa-download">Download</i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>Merchant Name</th>
+                                            <th>Amount</th>
+
+                                        </thead>
+
+                                        <tbody>
+                                            {% for ac in transaction %}
+                                                <tr>
+                                                    <td>{{ac.date}}</td>
+                                                    <td>{{ac.name}}</td>
+                                                    <td>{{ac.merchant_name}}</td>
+                                                    <td>{{ac.amount}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                            </div>
+                        {% else %}
+                            <small>{{head}}</small>
+                        {% endif %}
+                        </div>
+
+              </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="bank_account" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Bank Accounts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+
+                        <h4>{{bank}}</h4>
+                    <form method="post" action="/select/">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" name="input_search" placeholder="Search" class="form-control">
+                            <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03" name="search_field" value="search" onclick="this.form.submit()">Search</button>
+                        </div>
+                    </form>
+
+
+                        {% for bi in bank_info %}
+                        <div class="list-group">
+<!--                            <a href="#" name="{{bi.name}}-{{bi.id}}"  onclick="return loadlogin(this.name);" class="list-group-item list-group-item-action flex-column align-items-start">-->
+<!--                            onclick="return loadlogin(this.name);"-->
+                          <a href="https://cdn.plaid.com/link/v2/stable/sandbox-oauth-login.html?client_name=Plaid%20Quickstart&redirect_uri=https%3A%2F%2Fcdn.plaid.com%2Flink%2Fv2%2Fstable%2Foauth.html&state=eyJvYXV0aF9zdGF0ZV9pZCI6IjA5NTlmZWFkLTExYWItNDdiZi05ZmQzLWMzNjBhYWNiM2NkZiIsInVzZV9vYXV0aF9jYWxsYmFjayI6ZmFsc2UsInBsYWlkX2VudiI6InNhbmRib3giLCJyZWRpcmVjdF91cmkiOiJwbGFpZC1saW5rLW9hdXRoOi8vaGFuZG9mZiJ9" name="{{bi.name}}-{{bi.id}}"  class="list-group-item list-group-item-action flex-column align-items-start">
+<!--                            onclick="return loadlogin(this.name);"-->
+                              <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" style="color: orange">{{bi.name}}</h5>
+                            </div>
+                            <p class="mb-1"></p>
+                            <small>www.plaid.com</small>
+                          </a>
+
+                        </div>
+                    {% endfor %}
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+<!--                <button type="button" class="btn btn-primary">Send message</button>-->
+              </div>
+            </div>
+          </div>
+    </div>
+
+
+        <div class="modal fade" id="login_window" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="LoginModalLabel" style="color: orange">Enter Your Bank Credentials</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form class="mx-1 mx-md-4" action="/select/" method="post">
+                    {% csrf_token %}
+                    <div class="d-flex flex-row align-items-center mb-4">
+<!--                        <label class="form-label" for="form3Example4c">Username</label>-->
+
+                    <div class="form-outline flex-fill mb-0">
+
+                        <h3 id="title"></h3>
+
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-4">
+<!--                        <label class="form-label" for="form3Example4c">Username</label>-->
+                      <i class="fa fa-user"><span></span></i>&nbsp;&nbsp;
+                    <div class="form-outline flex-fill mb-0">
+
+                      <input type="text"  class="form-control" placeholder="Username" name="username"/>
+
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fa fa-key"><span></span></i>&nbsp;&nbsp;
+                    <div class="form-outline flex-fill mb-0">
+                      <input type="password" placeholder="Password" class="form-control" name="password"/>
+                    </div>
+                  </div>
+
+                    <input type="hidden" name="ins_id" id="ins_id" value="">
+                    <input type="hidden" name="bank_name" id="bank" value="">
+                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+
+                        <i class="fas fa-loc fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                          <button style="width: 400px; background-color: orange; color: white;" type="submit" class="btn btn-lg" name="login" onclick="this.form.submit()" value="Login">Login</button>
+                      </div>
+
+                  </div>
+
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+    </div>
+
+        <div class="modal fade" id="login_success" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="SuccessModalLabel" style="color: orange"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form class="mx-1 mx-md-4" action="" method="post">
+                    {% csrf_token %}
+                    <div class="d-flex flex-row align-items-center mb-4">
+
+                        <div class="form-outline flex-fill mb-0">
+
+                            <h3>
+                                <i class="fa fa-check"><span>Login Successful.</span></i>
+                            </h3>
+
+                        </div>
+                  </div>
+
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" style="background-color: orange; color: white;" class="btn btn-lg" data-bs-dismiss="modal">Continue</button>
+              </div>
+            </div>
+          </div>
+    </div>
+
+
+</section>
+</body>
+    <script>
+        function loadlogin(bank_name){
+
+            bank_name = bank_name.split("-");
+
+            $('#bank_account').modal('hide');
+            $('#login_window').modal('show')
+            document.getElementById("title").innerHTML = bank_name[0];
+            document.getElementById("ins_id").value = bank_name[1];
+            document.getElementById("bank").value = bank_name[0];
+
+            return false;
+        }
+    </script>
+</html>
